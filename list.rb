@@ -18,18 +18,23 @@ if __FILE__ == $0 then
     c.access_token_secret = config['access_token_secret']
   end 
 
+  list = 'pyconjp2014'
+  list = 'pyconapac2013'
   members = []
   data = ARGF.read
   data.each_line do |line|
     member = line.chomp
+    next if member.empty?
     puts member
     begin
-      client.add_list_member("pyconjp2014", member)
+      next if client.list_member?(list, member)
+      client.add_list_member(list, member)
     rescue Twitter::Error::Forbidden => e
-      puts "#{member} can't add to pyconjp2014 list"
+      puts "#{member} can't add to #{list} list"
       members << member
       next
     end
+    sleep 5
   end
   puts
   puts members
