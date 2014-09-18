@@ -29,7 +29,12 @@ if __FILE__ == $0 then
     begin
       next if client.list_member?(list, member)
       client.add_list_member(list, member)
+    rescue Twitter::Error::TooManyRequests => e
+      puts e
+      sleep 60 * 15
+      retry
     rescue Twitter::Error::Forbidden => e
+      puts e
       puts "#{member} can't add to #{list} list"
       members << member
       next
